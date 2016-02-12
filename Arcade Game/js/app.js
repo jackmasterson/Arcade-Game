@@ -1,15 +1,14 @@
 
 // Enemies our player must avoid
 var Enemy = function(y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    var yCoord = [130, 220, 310];
 
-    this.sprite = 'images/enemy-bug.png';
     this.x = 100;
-    this.y = y;
+    this.y = randY = yCoord[Math.floor(Math.random() * yCoord.length)];
+    this.sprite = 'images/enemy-bug.png';
+    
+
 };
 
 
@@ -17,16 +16,14 @@ var Enemy = function(y) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+  //  allEnemies.push(new Enemy());
 
-//enemy speed 
+    //enemy speed 
 
     var time = new Date().getTime() * (0.0002);
-    
-    for (var i = 0; i < allEnemies.length; i++) {
-        //   console.log(allEnemies[0].x);
+
+    for (var i = 0, len = allEnemies.length; i < len; i++) {
+
         allEnemies[i].x = (Math.tan(time) * 600 + 10);
 
         var speed = (Math.tan(time) * 600 + 100);
@@ -39,15 +36,13 @@ Enemy.prototype.update = function(dt) {
     }
 };
 
-// Draw the enemy on the screen, required method for game
+
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite),
         this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+
 var Player = function() {
 
     this.sprite = ['images/char-cat-girl.png'];
@@ -55,90 +50,94 @@ var Player = function() {
     this.y = 400;
 };
 
-
 Player.prototype.update = function(dt) {
+    this.collisionDetection();
+};
 
-    //detects if there is a collision between the player and either the
-    //water or an enemy/obstacle by comparing each's x and y coordinates.
-    //if they all equal the same values, then it initiates the startOver
-    //function, resetting the player's x and y coordinates and adding to
-    //either the Losses or the Levels value
-    function collisionDetection() {
-        for (var c = 0; c < allEnemies.length; c++) {
-            var en = allEnemies[c];
 
-            var plCoord = [player.x, player.y];
-            var enCoord = [en.x, en.y];
+//detects if there is a collision between the player and either the
+//water or an enemy/obstacle by comparing each's x and y coordinates.
+//if they all equal the same values, then it initiates the startOver
+//function, resetting the player's x and y coordinates and adding to
+//either the Losses or the Levels value
 
-            if (player.x == Math.floor(en.x) && player.y == en.y) {
-                youLose();
-            } else {
-                if (player.x == Math.ceil(en.x) && player.y == en.y) {
-                    youLose();
-                }
-                if (player.y == -50) {
-                    youWin();
-                }
+Player.prototype.collisionDetection = function() {
+    for (var c = 0, len = allEnemies.length; c < len; c++) {
+        var en = allEnemies[c];
+
+        var plCoord = [this.x, this.y];
+        var enCoord = [en.x, en.y];
+
+        if (this.x == Math.floor(en.x) && this.y == en.y) {
+            this.youLose();
+        } else {
+            if (this.x == Math.ceil(en.x) && this.y == en.y) {
+                this.youLose();
             }
-        }
-        for (c = 0; c < allObstacles.length; c++) {
-            var ob = allObstacles[c];
-            //              console.log(allObstacles[c].y);
-            if (player.x == Math.floor(ob.x) && player.y == (ob.y - 90)) {
-                youLose();
-            } else {
-                if (player.x == Math.ceil(ob.x) && player.y == (ob.y - 90)) {
-                    youLose();
-                }
-
-            }
-        }
-        for (c = 0; c < allMowers.length; c++) {
-            var mow = allMowers[c];
-            //              console.log(allObstacles[c].y);
-            if (player.x == Math.floor(mow.x) && player.y == (mow.y)) {
-                youLose();
-            } else {
-                if (player.x == Math.ceil(mow.x) && player.y == (mow.y)) {
-                    youLose();
-                }
-                console.log(mow.y);
+            if (this.y == -50) {
+                this.youWin();
             }
         }
     }
+    for (c = 0, len = allObstacles.length; c < len; c++) {
 
-    collisionDetection();
+        var ob = allObstacles[c];
+
+        if (this.x == Math.floor(ob.x) && this.y == (ob.y - 90)) {
+            this.youLose();
+        } else {
+            if (this.x == Math.ceil(ob.x) && this.y == (ob.y - 90)) {
+                this.youLose();
+            }
+        }
+    }
+    for (c = 0, len = allMowers.length; c < len; c++) {
+
+        var mow = allMowers[c];
+
+        if (this.x == Math.floor(mow.x) && this.y == (mow.y)) {
+            this.youLose();
+        } else {
+            if (this.x == Math.ceil(mow.x) && this.y == (mow.y)) {
+                this.youLose();
+            }
+        }
+    }
+};
+
+
 
 //detects when the collision is with an enemy or obstacle and
 //quickly toggles the 'loser' graphic
-    function youLose() {
-        startOver();
-        if ($('#loser').css('display') == 'none') {
-            $('#loser').toggle(1000);
-        }
-        if ($('#loser').css('display') == 'block') {
-            $('#loser').toggle(1000);
-        }
 
-        var currentValue = parseInt($('#losses').text(), 10);
-        var newValue = currentValue + 1;
-        $('#losses').text(newValue);
+Player.prototype.youLose = function() {
+    this.startOver();
+    if ($('#loser').css('display') == 'none') {
+        $('#loser').toggle(1000);
+    }
+    if ($('#loser').css('display') == 'block') {
+        $('#loser').toggle(1000);
+    }
 
-        allLives.pop();
+    var currentValue = parseInt($('#losses').text(), 10);
+    var newValue = currentValue + 1;
+    $('#losses').text(newValue);
 
-        if (newValue == 3) {
-            gameOver();
-        }
+    allLives.pop();
+
+    if (newValue == 3) {
+        this.gameOver();
+    }
+};
 
 
 //displays the 'Game Over' graphic
-        function gameOver() {
-            $('body').append('#gameOver');
-            if ($('#gameOver').css('display') == 'none') {
-                $('#gameOver').toggle(2000);
-            }
-        }
+Player.prototype.gameOver = function() {
+    $('body').append('#gameOver');
+    if ($('#gameOver').css('display') == 'none') {
+        $('#gameOver').toggle(2000);
     }
+};
 
 //detects if the collision is with water, toggles the 'winner winner'
 //graphic; invokes the levelUp function; adds a life if you reach level
@@ -146,38 +145,38 @@ Player.prototype.update = function(dt) {
 //also invokes the levelFour function which adds lawn mower enemies
 // at level four and beyond
 
-    function youWin() {
-        startOver();
-        if ($('#winner').css('display') == 'none') {
-            $('#winner').toggle(1500);
-        }
-        if ($('#winner').css('display') == 'block') {
-            $('#winner').toggle(1500);
-        }
-        var currentValue = parseInt($('#wins').text(), 10);
-        var newValue = currentValue + 1;
-        $('#wins').text(newValue);
+Player.prototype.youWin = function() {
+    this.startOver();
+    if ($('#winner').css('display') == 'none') {
+        $('#winner').toggle(1500);
+    }
+    if ($('#winner').css('display') == 'block') {
+        $('#winner').toggle(1500);
+    }
+    var currentValue = parseInt($('#wins').text(), 10);
+    var newValue = currentValue + 1;
+    $('#wins').text(newValue);
 
-        levelUp();
+    this.levelUp();
 
-        if (newValue == 5) {
-            allLives.push(new Life(400, 500));
-        }
-        if (newValue == 10) {
-            if ($('#champion').css('display') == 'none') {
-                $('#champion').toggle(2500);
-            }
-        }
-
-        if (newValue > 3) {
-            levelFour();
+    if (newValue == 5) {
+        allLives.push(new Life(400, 500));
+    }
+    if (newValue == 10) {
+        if ($('#champion').css('display') == 'none') {
+            $('#champion').toggle(2500);
         }
     }
 
-    function startOver() {
-        player.x = 200;
-        player.y = 400;
+    if (newValue > 3) {
+        this.levelFour();
     }
+};
+
+Player.prototype.startOver = function() {
+    this.x = 200;
+    this.y = 400;
+
 };
 
 Player.prototype.render = function() {
@@ -187,88 +186,86 @@ Player.prototype.render = function() {
 
 //controls player movement
 Player.prototype.handleInput = function() {
-    
-        if (event.keyCode == 37) {
-            this.x -= 100;
-        }
-        if (event.keyCode == 39) {
-            this.x += 100;
-        }
-        if (event.keyCode == 38) {
-            this.y -= 90;
-        }
-        if (event.keyCode == 40) {
-            this.y += 90;
-        }
-        
-//ensures player remains on the screen
-    if (player.x > 490) {
+
+    if (event.keyCode == 37) {
+        this.x -= 100;
+    }
+    if (event.keyCode == 39) {
+        this.x += 100;
+    }
+    if (event.keyCode == 38) {
+        this.y -= 90;
+    }
+    if (event.keyCode == 40) {
+        this.y += 90;
+    }
+
+    //ensures player remains on the screen
+    if (this.x > 490) {
         this.x = 400;
     }
-    if (player.x < 0) {
+    if (this.x < 0) {
         this.x = 0;
     }
-    if (player.y > 400) {
-        player.y = 400;
+    if (this.y > 400) {
+        this.y = 400;
     }
 };
 
 //with each levelUp, a new obstacle is added at a random x and y coordinate
 
-levelUp = function() {
-    var Obstacle = function(randX, randY) {
-        var xCoord = [0, 100, 200, 300, 400];
-        var yCoord = [130, 220, 310];
-        this.sprite = 'images/enemy.png';
-        this.x = randX = xCoord[Math.floor(Math.random() * xCoord.length)];
-        this.y = randY = yCoord[Math.floor(Math.random() * yCoord.length)];
-    };
-
-    Obstacle.prototype.render = function() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    };
-
+Player.prototype.levelUp = function() {
     allObstacles.push(new Obstacle());
 };
 
+var Obstacle = function(randX, randY) {
+    var xCoord = [0, 100, 200, 300, 400];
+    var yCoord = [130, 220, 310];
+    this.sprite = 'images/enemy.png';
+    this.x = randX = xCoord[Math.floor(Math.random() * xCoord.length)];
+    this.y = randY = yCoord[Math.floor(Math.random() * yCoord.length)];
+};
+
+Obstacle.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+    
+
 //adds lawn mower enemies that work on the grass tiles and come from
 //right to left
-levelFour = function() {
-
-    var Mower = function(randX, randY) {
-        var xCoord = [130, 50, 0, 350];
-        var yCoord = [310, 400];
-        this.sprite = 'images/mower.png';
-        this.x = randX = xCoord[Math.floor(Math.random() * xCoord.length)];
-        this.y = randY = yCoord[Math.floor(Math.random() * yCoord.length)];
-
-    };
-
-
-    Mower.prototype.update = function(dt) {
-        var time = new Date().getTime() * (0.0002);
-
-
-        for (i = 0; i < allMowers.length; i++) {
-            //   console.log(allEnemies[0].x);
-            allMowers[i].x = -(Math.tan(time) * 600 + 100 * [i]);
-        }
-    };
-
-    Mower.prototype.render = function() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    };
+Player.prototype.levelFour = function() {
     allMowers.push(new Mower());
 };
+    
+var Mower = function(randX, randY) {
+    var xCoord = [130, 50, 0, 350];
+    var yCoord = [310, 400];
+    this.sprite = 'images/mower.png';
+    this.x = randX = xCoord[Math.floor(Math.random() * xCoord.length)];
+    this.y = randY = yCoord[Math.floor(Math.random() * yCoord.length)];
+};
+
+Mower.prototype.update = function(dt) {
+    var time = new Date().getTime() * (0.0002);
+
+    for (i = 0, len = allMowers.length; i < len; i++) {
+
+        allMowers[i].x = -(Math.tan(time) * 600 + 100 * [i]);
+    }
+};
+
+Mower.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+
+
 
 
 //displays number of lives left in the lower right hand corner
 var Life = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/lives.png';
     this.x = x;
     this.y = y;
@@ -285,11 +282,7 @@ Life.prototype.render = function() {
 //the following works to set up the Game Menu, where you can select
 // a character and start the game
 var Menu = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
@@ -314,13 +307,6 @@ var allMowers = [];
 var allLives = [new Life(475, 500), new Life(450, 500),
     new Life(425, 500)
 ];
-
-
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
 
 
 // This listens for key presses and sends the keys to your

@@ -1,17 +1,21 @@
-frontend-nanodegree-arcade-game
-===============================
+Frogger Arcade Game Clone:
 
-Students should use this [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2696458597/m-2687128535) for self-checking their submission.
+How to Start Game 
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+1. Navigate to the Github repository located at [https://github.com/jackmasterson/Arcade-Game] and open index.html.
 
+2. 'Select Character' screen should load.
 
-Frogger Game:
+How to Play
 
-When the project loads, a simple character-selection game menu screen will appear. Click on whichever character you'd like to be and the game screen will come up.
+1. Select a character from the opening screen.
 
-The goal is to get to the water without getting hit by a bug (or eventually a lawn mower or an obstacle). With each level, an obstacle is added. Once you hit level four, a lawn mower is added. Players can move left, right, up, and down one tile at a time with the respective arrow keys.
+2. Control your character using the 'arrow' keys, 'up', 'down', 'left', and 'right.' You can move one tile at a time, and you cannot move diagonally.
 
-After level 5, you get a new life. New lives are displayed as character graphics in the lower right-hand corner. When you run out of lives, a Game Over screen with the option to start over appears.
+3. Try to reach the water without getting hit by a bug. When you reach the water, you will progress to the next level. Levels are kept track of on the scoreboard on the left, as are number of losses. Number of lives are located in the bottom right.
 
-If you get to level 10, you get a prize and a "Winner's Screen" appears.s
+4. With each level upgrade, an obstacle is added. Avoid them as well. At level four, a lawn mower is added so the grass is no longer safe. You can get an extra life at level 5. 
+
+5. When you run out of lives, a Game Over screen will appear.
+
+6. The goal is to get to level 10, and a prize and 'Winner's Screen' will be presented. 
